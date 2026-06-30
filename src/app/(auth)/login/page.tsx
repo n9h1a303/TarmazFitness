@@ -1,13 +1,15 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/dashboard"
   const [credential, setCredential] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
@@ -30,7 +32,7 @@ export default function LoginPage() {
         return
       }
 
-      router.push("/dashboard")
+      router.push(callbackUrl)
       router.refresh()
     } catch {
       setError("Có lỗi xảy ra, vui lòng thử lại")
@@ -95,5 +97,13 @@ export default function LoginPage() {
         </Link>
       </p>
     </>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   )
 }
