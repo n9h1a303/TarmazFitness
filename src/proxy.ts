@@ -21,6 +21,7 @@ export function proxy(request: NextRequest) {
   const token = request.cookies.get("next-auth.session-token")
     ?? request.cookies.get("__Secure-next-auth.session-token")
     ?? request.cookies.get("authjs.session-token")
+    ?? request.cookies.get("__Secure-authjs.session-token")
 
   if (pathname.startsWith("/api/") && !token) {
     return NextResponse.json(
